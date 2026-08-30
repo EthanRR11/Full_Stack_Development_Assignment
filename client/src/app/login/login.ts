@@ -1,39 +1,73 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
-  imports: [FormsModule],
   selector: 'app-login',
-  styleUrl: './login.css',
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.html',
+  styleUrl: './login.css'
 })
 export class Login {
 
   username = '';
   password = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {}
 
   login() {
 
-    if(this.username === 'admin' && this.password === 'admin123'){
-      this.router.navigate(['/admin']);
+  
+    if (
+      this.username === 'admin' &&
+      this.password === 'admin123'
+    ) {
+
+      const adminUser = {
+        username: 'admin',
+        role: 'admin'
+      };
+
+      localStorage.setItem(
+        'currentUser',
+        JSON.stringify(adminUser)
+      );
+
+      this.router.navigate(['/admin_dashboard']);
       return;
     }
 
-    if(this.username === 'user' && this.password === 'password'){
-      this.router.navigate(['/dashboard']);
-      return;
-    }
+    this.http.post<any>(
+      'http://localhost:3000/api/login',
+      {
+        username: this.username,
+        password: this.password
+      }
+    ).subscribe({
 
-    alert('Invalid Login');
+      next: (user) => {
+
+        localStorage.setItem(
+          'currentUser',
+          JSON.stringify(user)
+        );
+
+        this.router.navigate(['/dashboard']);
+
+      },
+
+      error: () => {
+
+        alert('Invalid Login');
+
+      }
+
+    });
 
   }
-
-
-
-
-
 
 }

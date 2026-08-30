@@ -243,7 +243,7 @@ Provides access to audit records and administrative activity logs.
 
 ---
 
-# 6. API Endpoints
+# 6. server-based Endpoints
 
 The following endpoints are proposed for server-side functionality , these endpoints support, user management, group management, channel management and messsaging functionality
 

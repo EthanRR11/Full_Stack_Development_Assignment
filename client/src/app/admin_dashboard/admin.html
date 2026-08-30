@@ -1,0 +1,97 @@
+<nav class="navbar">
+    <div class="logo">
+        <h2>Chat Application</h2>
+    </div>
+
+    <div class="user-section">
+        <span>Super Admin</span>
+        <button>Profile</button>
+        <button (click)="logout">Logout</button>
+    </div>
+</nav>
+
+<div class="dashboard-container">
+
+    
+    <aside class="sidebar">
+        <ul>
+            <li class="active">Dashboard</li>
+            <li>User Management</li>
+            <li>Group Requests</li>
+            <li>Audit Logs</li>
+            <li>System Notifications</li>
+            <li>Banned Users</li>
+            <li>System Settings</li>
+        </ul>
+    </aside>
+
+   
+    <main class="main-content">
+
+        <div class="top-section">
+
+            <div class="stats-grid">
+
+                <div class="card">
+                    <h3>Total Users</h3>
+                    <p>1,243</p>
+                </div>
+
+                <div class="card">
+                    <h3>Total Groups</h3>
+                    <p>156</p>
+                </div>
+
+                <div class="card">
+                    <h3>Pending Requests</h3>
+                    <p>12</p>
+                </div>
+
+                <div class="card">
+                    <h3>Banned Users</h3>
+                    <p>15</p>
+                </div>
+
+            </div>
+
+            <div class="notification-panel">
+                <h3>System Notification</h3>
+
+                <textarea
+                    placeholder="Send a message to all users..."
+                ></textarea>
+
+                <button>Send</button>
+            </div>
+
+        </div>
+
+        <div class="bottom-section">
+
+            <div class="panel">
+                <h3>Pending Group Requests</h3>
+
+                <ul>
+                    <li>Gaming Community Request</li>
+                    <li>IT Students Club</li>
+                    <li>AI Discussion Group</li>
+                    <li>Cyber Security Hub</li>
+                </ul>
+            </div>
+
+            <div class="panel">
+                <h3>Recent Audit Logs</h3>
+
+                <ul>
+                    <li>User1 created channel #support</li>
+                    <li>Admin banned User5</li>
+                    <li>New group approved</li>
+                    <li>Password reset performed</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </main>
+
+</div>

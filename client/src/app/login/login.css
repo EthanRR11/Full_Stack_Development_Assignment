@@ -1,16 +1,32 @@
-.login-container {
-    width: 350px;
-    margin: 100px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.login-page{
+    height:100vh;
+    background:#ececec;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
 
-input {
-    padding: 12px;
+h1{
+    width:100%;
+    text-align:center;
+    padding:30px;
+    border-bottom:3px solid black;
 }
 
-button {
-    padding: 12px;
-    cursor: pointer;
+.login-form{
+    margin-top:80px;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+input{
+    width:250px;
+    padding:12px;
+}
+
+button{
+    width:120px;
+    margin:auto;
+    padding:10px;
 }

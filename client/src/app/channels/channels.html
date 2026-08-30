@@ -1,1 +1,35 @@
-<p>channels works!</p>
+<div class="channel-container">
+
+    <div class="channel-card">
+
+        <h2>Create Channel</h2>
+
+        <div class="form-group">
+            <label>Channel Name</label>
+            <input
+                type="text"
+                [(ngModel)]="channel.name"
+                name="name"
+                placeholder="Enter channel name"
+                required>
+        </div>
+
+        <div class="form-group">
+            <label>Description</label>
+            <textarea
+                [(ngModel)]="channel.description"
+                name="description"
+                rows="4"
+                placeholder="Enter channel description">
+            </textarea>
+        </div>
+
+       <button
+        class="submit-btn"
+        (click)="submitChannelRequest()">
+
+    Submit Channel Request
+
+    </button>
+
+  
