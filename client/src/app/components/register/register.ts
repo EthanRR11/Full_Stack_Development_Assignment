@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +15,7 @@ export class Register {
   password = '';
   age = 0;
 
-  constructor(private http: HttpClient) {}
+  constructor(private authService: AuthService) {}
 
   register() {
 
@@ -27,8 +27,7 @@ export class Register {
       role: 'user'
     };
 
-    this.http.post(
-      'http://localhost:3000/api/register',
+    this.authService.register(
       newUser
     ).subscribe({
       next: () => {
@@ -42,5 +41,4 @@ export class Register {
     });
 
   }
-
 }

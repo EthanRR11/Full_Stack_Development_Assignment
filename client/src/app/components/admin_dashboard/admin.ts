@@ -19,7 +19,7 @@ export class Admin {
       return;
     }
 
-    if (user.role !== 'admin') {
+    if (user.role !== 'superadmin') {
       this.router.navigate(['/dashboard']);
       return;
     }
@@ -30,7 +30,7 @@ export class Admin {
 
     localStorage.removeItem('currentUser');
 
-    this.router.navigate(['/login']);
+    this.router.navigate(['']);
 
   }
 

@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.bootstrap-container {
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #f4f6f9;
+}
+
+.bootstrap-card {
+    width: 450px;
+
+    background: white;
+
+    padding: 40px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+.bootstrap-card h1 {
+    text-align: center;
+    color: #1f2937;
+}
+
+.bootstrap-card p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.bootstrap-card input {
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #ddd;
+    border-radius: 6px;
+
+    font-size: 14px;
+}
+
+.bootstrap-card button {
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #2563eb;
+    color: white;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.bootstrap-card button:hover {
+    background: #1e4fd6;
+}

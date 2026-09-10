@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth';
 
 @Component({
   imports: [RouterLink],
@@ -14,7 +15,7 @@ export class Dashboard {
     const user = localStorage.getItem('currentUser');
 
     if (!user) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['']);
     }
 
   }
@@ -22,8 +23,7 @@ export class Dashboard {
   logout() {
 
     localStorage.removeItem('currentUser');
-
-    this.router.navigate(['/login']);
+    this.router.navigate(['']);
 
   }
 

@@ -1,0 +1,28 @@
+<div class="bootstrap-container">
+
+    <div class="bootstrap-card">
+
+        <h1>Bootstrap Super Admin</h1>
+
+        <p>
+            No Super Administrator account was found.
+            Please create the first Super Administrator account.
+        </p>
+
+        <input
+            type="text"
+            placeholder="Username"
+            [(ngModel)]="username">
+
+        <input
+            type="password"
+            placeholder="Password"
+            [(ngModel)]="password">
+
+        <button (click)="createAdmin()">
+            Create Super Admin
+        </button>
+
+    </div>
+
+</div>

@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
 
-import { Login } from './login/login';
-import { Dashboard } from './dashboard/dashboard';
-import { Admin } from './admin_dashboard/admin';
-import { Groups } from './groups/groups';
-import { Channels } from './channels/channels';
-import { Register } from './register/register';
+import { Login } from './components/login/login';
+import { Dashboard } from './components/dashboard/dashboard';
+import { Admin } from './components/admin_dashboard/admin';
+import { Groups } from './components/groups/groups';
+import { Channels } from './components/channels/channels';
+import { Register } from './components/register/register';
+import { Bootstrap } from './components/bootstrap/bootstrap';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -14,5 +15,6 @@ export const routes: Routes = [
   { path: 'groups',component: Groups},
   { path: 'channels', component: Channels},
   { path: 'register', component: Register},
-  { path: 'login',component: Register}
+  { path: 'login',component: Register},
+  { path: 'bootstrap', component: Bootstrap}
 ];
