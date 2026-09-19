@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class Auth {
 
   constructor(
     private http: HttpClient,
