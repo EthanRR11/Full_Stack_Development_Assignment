@@ -1,42 +1,16 @@
 [
   {
-    "id": 1788096019062,
-    "username": "ethan richmond",
-    "password": "password",
+    "id": "1788393580468",
+    "email": "user1@gmail.com",
+    "username": "user1",
+    "password": "123",
+    "age": 15,
     "role": "user"
   },
   {
-    "id": 1788096054070,
-    "username": "ethan richmond",
-    "password": "ethan",
-    "role": "user"
-  },
-  {
-    "id": 1788096728184,
-    "username": "Ethan11",
-    "password": "Jedimaster1",
-    "role": "user"
-  },
-  {
-    "id": 1788096832553,
-    "username": "Ethan11",
-    "password": "Jedimaster1",
-    "role": "user"
-  },
-  {
-    "id": "1788096896802",
-    "email": "ewok.richmond@gmail.com",
-    "username": "Ethan",
-    "password": "jeieid",
-    "age": 20,
-    "role": "user"
-  },
-  {
-    "id": "1788098165126",
-    "email": "",
-    "username": "",
-    "password": "",
-    "age": 0,
-    "role": "user"
+    "id": 1789017268480,
+    "username": "ethan",
+    "password": "1",
+    "role": "superadmin"
   }
 ]

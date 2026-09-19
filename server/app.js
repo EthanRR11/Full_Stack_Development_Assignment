@@ -145,7 +145,59 @@ app.post('/api/login', (req, res) => {
 
 });
 
+app.get('/api/bootstrap-check', (req, res) => {
 
+    const users = JSON.parse(
+        fs.readFileSync('./data/users.json')
+    );
+
+    const superAdmin = users.find(
+        user => user.role === 'superadmin'
+    );
+
+    res.json({
+        bootstrapRequired: !superAdmin
+    });
+
+});
+
+app.post('/api/bootstrap', (req, res) => {
+
+    const { username, password } = req.body;
+
+    const users = JSON.parse(
+        fs.readFileSync('./data/users.json')
+    );
+
+    const superAdminExists = users.find(
+        user => user.role === 'superadmin'
+    );
+
+    if (superAdminExists) {
+        return res.status(400).json({
+            message: 'Super Admin already exists'
+        });
+    }
+
+    const superAdmin = {
+        id: Date.now(),
+        username,
+        password,
+        role: 'superadmin'
+    };
+
+    users.push(superAdmin);
+
+    fs.writeFileSync(
+        './data/users.json',
+        JSON.stringify(users, null, 2)
+    );
+
+    res.json({
+        message: 'Super Admin Created'
+    });
+
+});
 
 
 app.listen(3000, () => {
