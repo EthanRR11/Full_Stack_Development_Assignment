@@ -25,12 +25,12 @@ export class Groups {
   console.log(this.group);
 
   this.http.post(
-    'http://localhost:3000/api/groups',
+    'http://localhost:3000/api/group-requests',
     this.group
   ).subscribe({
     next: (response) => {
       console.log('Success:', response);
-      alert('Group Created');
+      alert('Group Request Recieved');
     },
    error: (error) => {
   console.log(error);
