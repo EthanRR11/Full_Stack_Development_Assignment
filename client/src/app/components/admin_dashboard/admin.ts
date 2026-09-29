@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class Admin {
 
-  constructor(private router: Router) {
+  constructor(private router: Router,) {
 
     const user = JSON.parse(
       localStorage.getItem('currentUser') || '{}'
