@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AudiLog } from './audit-log';
+import { AuditLog } from './audit-log';
 
-describe('AudiLog', () => {
-  let component: AudiLog;
-  let fixture: ComponentFixture<AudiLog>;
+describe('AuditLog', () => {
+  let component: AuditLog;
+  let fixture: ComponentFixture<AuditLog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AudiLog],
+      imports: [AuditLog],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AudiLog);
+    fixture = TestBed.createComponent(AuditLog);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

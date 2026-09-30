@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ChannelService } from '../../services/channel';
 import { AuthService } from '../../services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-channels',
@@ -13,7 +14,8 @@ export class Channels {
 
   constructor(
     private channelService: ChannelService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   channel = {
@@ -45,6 +47,7 @@ export class Channels {
           console.log(response);
 
           alert('Channel Request Submitted');
+          this.router.navigate(['/dashboard'])
 
           this.channel = {
             name: '',

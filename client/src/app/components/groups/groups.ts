@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GroupService } from '../../services/group';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-groups',
@@ -11,7 +12,8 @@ import { GroupService } from '../../services/group';
 export class Groups {
 
   constructor(
-    private groupService: GroupService
+    private groupService: GroupService,
+    private router: Router
   ) {}
 
   group = {
@@ -44,6 +46,7 @@ export class Groups {
           console.log('Success:', response);
 
           alert('Group Request Received');
+          this.router.navigate(['/dashboard'])
 
           this.group = {
             title: '',

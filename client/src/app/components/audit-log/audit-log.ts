@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   imports: [],
-  selector: 'app-audi-log',
-  styleUrl: './audi-log.css',
-  templateUrl: './audi-log.html',
+  selector: 'app-audit-log',
+  styleUrl: './audit-log.css',
+  templateUrl: './audit-log.html',
 })
-export class AudiLog {}
+export class AuditLog {}

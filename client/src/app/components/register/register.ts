@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +16,9 @@ export class Register {
   password = '';
   age = 0;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+              private router: Router
+  ) {}
 
   register() {
 
@@ -30,8 +33,10 @@ export class Register {
     this.authService.register(
       newUser
     ).subscribe({
-      next: () => {
+      next: (User) => {
         alert('User Registered!');
+        this.authService.setCurrentUser(User)
+        this.router.navigate(['/dashboard'])
       },
 
       error: (error) => {

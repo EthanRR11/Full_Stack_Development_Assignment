@@ -9,6 +9,11 @@ export class GroupService {
         private http: HttpClient,
     ){}
 
+
+    setCurrentGroup(group: any){
+        localStorage.setItem('currentGroup',JSON.stringify(group))
+
+    }
     createGroupRequest(group: any){
         return this.http.post(
             'http://localhost:3000/api/group-requests',
