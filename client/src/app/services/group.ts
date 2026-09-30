@@ -9,7 +9,7 @@ export class GroupService {
         private http: HttpClient,
     ){}
 
-    createGrouprequest(group: any){
+    createGroupRequest(group: any){
         return this.http.post(
             'http://localhost:3000/api/group-requests',
             group

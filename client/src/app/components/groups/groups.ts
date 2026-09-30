@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { GroupService } from '../../services/group';
 
 @Component({
   selector: 'app-groups',
@@ -10,7 +10,9 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Groups {
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private groupService: GroupService
+  ) {}
 
   group = {
     title: '',
@@ -19,24 +21,49 @@ export class Groups {
     colourTheme: ''
   };
 
- submitGroupRequest() {
+  submitGroupRequest() {
 
-  console.log('Button clicked');
-  console.log(this.group);
+    const currentUser = JSON.parse(
+      localStorage.getItem('currentUser') || '{}'
+    );
 
-  this.http.post(
-    'http://localhost:3000/api/group-requests',
-    this.group
-  ).subscribe({
-    next: (response) => {
-      console.log('Success:', response);
-      alert('Group Request Recieved');
-    },
-   error: (error) => {
-  console.log(error);
-  alert(JSON.stringify(error));
-}
-  });
+    const groupRequest = {
+      ...this.group,
+      requestedBy: currentUser.id
+    };
 
-}
+    console.log('Button clicked');
+    console.log(groupRequest);
+
+    this.groupService
+      .createGroupRequest(groupRequest)
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log('Success:', response);
+
+          alert('Group Request Received');
+
+          this.group = {
+            title: '',
+            description: '',
+            ageLimit: 0,
+            colourTheme: ''
+          };
+
+        },
+
+        error: (error: any) => {
+
+          console.error(error);
+
+          alert('Failed to Submit Group Request');
+
+        }
+
+      });
+
+  }
+
 }

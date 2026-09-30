@@ -24,6 +24,27 @@ export class AuthService {
 
   }
 
+  bootstrap(username: string, password: string) {
+
+    return this.http.post(
+      'http://localhost:3000/api/bootstrap',
+      {
+        username,
+        password
+      }
+    );
+
+  }
+
+  setCurrentUser(user: any) {
+
+  localStorage.setItem(
+    'currentUser',
+    JSON.stringify(user)
+  );
+
+  }
+
   register(user: any) {
 
     return this.http.post(
@@ -38,7 +59,7 @@ export class AuthService {
     this.router.navigate([''])
   }
 
-  isloggedin(){
+  isloggedIn(){
     return localStorage.getItem('currentUser') !== null;
   }
 
@@ -48,15 +69,21 @@ export class AuthService {
 
   isGroupAdmin(){
     const user = this.getCurrentUser();
-
     return user.role === 'groupadmin'
   }
 
   isSuperAdmin(){
     const user = this.getCurrentUser();
-
     return user.role === 'superadmin'
-
   }
+
+  checkBootstrap() {
+  return this.http.get<any>(
+    'http://localhost:3000/api/bootstrap-check'
+  );
+
+  
+
+}
 
 }

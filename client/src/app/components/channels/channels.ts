@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { ChannelService } from '../../services/channel';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-channels',
@@ -10,29 +11,58 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Channels {
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private channelService: ChannelService,
+    private authService: AuthService
+  ) {}
 
   channel = {
     name: '',
-    description: '',
+    description: ''
   };
 
   submitChannelRequest() {
 
-  this.http.post(
-    'http://localhost:3000/api/channels',
-    this.channel
-  ).subscribe({
-    next: (response) => {
-      console.log(response);
-      alert('Channel Created');
-    },
+    const currentUser =
+      this.authService.getCurrentUser();
 
-      error: (error) => {
-        console.error(error);
-        alert('Error Creating Channel');
-      }
-    });
+    const currentGroup = JSON.parse(
+      localStorage.getItem('currentGroup') || '{}'
+    );
+
+    const channelRequest = {
+      ...this.channel,
+      groupID: currentGroup.id,
+      requestedBy: currentUser.id
+    };
+
+    this.channelService
+      .createChannelRequests(channelRequest)
+      .subscribe({
+
+        next: (response: any) => {
+
+          console.log(response);
+
+          alert('Channel Request Submitted');
+
+          this.channel = {
+            name: '',
+            description: ''
+          };
+
+        },
+
+        error: (error: any) => {
+
+          console.error(error);
+
+          alert('Failed to Submit Channel Request');
+
+        }
+
+      });
 
   }
+
 }

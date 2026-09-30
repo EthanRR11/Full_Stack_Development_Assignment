@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AudiLog } from './audi-log';
+import { AudiLog } from './audit-log';
 
 describe('AudiLog', () => {
   let component: AudiLog;

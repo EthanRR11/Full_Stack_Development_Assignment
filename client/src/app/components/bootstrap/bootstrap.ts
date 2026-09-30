@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-bootstrap',
@@ -15,32 +15,37 @@ export class Bootstrap {
   password = '';
 
   constructor(
-    private http: HttpClient,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   createAdmin() {
 
-    this.http.post(
-      'http://localhost:3000/api/bootstrap',
-      {
-        username: this.username,
-        password: this.password
+    this.authService.bootstrap(
+      this.username,
+      this.password
+    ).subscribe({
+
+      next: () => {
+
+        this.authService.setCurrentUser({
+          username: this.username,
+          role: 'superadmin'
+        });
+
+        alert('Super Admin Created');
+
+        this.router.navigate([
+          '/admin_dashboard'
+        ]);
+
+      },
+
+      error: () => {
+
+        alert('Failed to Create Super Admin');
+
       }
-    ).subscribe(() => {
-
-
-
-      alert('Super Admin Created');
-      localStorage.setItem(
-      'currentUser',
-      JSON.stringify({
-        username: this.username,
-        role: 'superadmin'
-      })
-    );
-
-    this.router.navigate(['/admin_dashboard']);
 
     });
 

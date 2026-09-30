@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -17,51 +16,30 @@ export class Login implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService,
-    private http: HttpClient
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
 
-    this.http.get<any>(
-      'http://localhost:3000/api/bootstrap-check'
-    ).subscribe({
+    this.authService
+      .checkBootstrap()
+      .subscribe({
 
-      next: (response) => {
+        next: (response) => {
 
-        if (response.bootstrapRequired) {
+          if (response.bootstrapRequired) {
 
-          this.router.navigate(['/bootstrap']);
+            this.router.navigate(['/bootstrap']);
+
+          }
 
         }
 
-      }
-
-    });
+      });
 
   }
 
   login() {
-
-  
-    if (
-      this.username === 'admin' &&
-      this.password === 'admin123'
-    ) {
-
-      const adminUser = {
-        username: 'admin',
-        role: 'admin'
-      };
-
-      localStorage.setItem(
-        'currentUser',
-        JSON.stringify(adminUser)
-      );
-
-      this.router.navigate(['/admin_dashboard']);
-      return;
-    }
 
     this.authService.login(
       this.username,
@@ -70,16 +48,28 @@ export class Login implements OnInit {
 
       next: (user) => {
 
-        localStorage.setItem(
-          'currentUser',
-          JSON.stringify(user)
-        );
+        this.authService.setCurrentUser(user);
 
-        if (user.role == 'superadmin'){
-          this.router.navigate(['/admin_dashboard'])
+        if (user.role === 'superadmin') {
+
+          this.router.navigate([
+            '/admin_dashboard'
+          ]);
+
         }
-        else{
-          this.router.navigate(['/dashboard']);
+        else if (user.role === 'groupadmin') {
+
+          this.router.navigate([
+            '/group-admin'
+          ]);
+
+        }
+        else {
+
+          this.router.navigate([
+            '/dashboard'
+          ]);
+
         }
 
       },
@@ -93,5 +83,4 @@ export class Login implements OnInit {
     });
 
   }
-
 }
