@@ -7,10 +7,8 @@
 
 body {
     background: #f5f7fb;
-    overflow-x: hidden;
+    overflow: hidden;
 }
-
-
 
 nav {
     background: #34495e;
@@ -31,15 +29,15 @@ nav {
     cursor: pointer;
 }
 
-
+/* Layout */
 
 .container {
     display: grid;
     grid-template-columns: 220px 220px 1fr 220px;
-    min-height: calc(100vh - 74px);
+    height: calc(100vh - 72px);
 }
 
-
+/* Sidebars */
 
 .groups,
 .channels,
@@ -47,6 +45,9 @@ nav {
     background: white;
     padding: 20px;
     border-right: 1px solid #ddd;
+
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .online-users {
@@ -76,7 +77,21 @@ nav {
     border-radius: 6px;
 }
 
+.groups li,
+.channels li {
+    cursor: pointer;
+}
 
+.groups li:hover,
+.channels li:hover {
+    background: #dbeafe;
+}
+
+.groups li.active,
+.channels li.active {
+    background: #3498db;
+    color: white;
+}
 
 .groups button,
 .channels button {
@@ -92,17 +107,26 @@ nav {
     cursor: pointer;
 }
 
-
+/* Chat Area */
 
 .chat-area {
     padding: 20px;
 
     display: flex;
     flex-direction: column;
+
+    height: 100%;
+    overflow: hidden;
 }
 
 .messages {
     flex: 1;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 10px;
+    min-height: 0;
 }
 
 .message {
@@ -114,12 +138,20 @@ nav {
     border-left: 4px solid #3498db;
 }
 
+.message strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #34495e;
+}
 
+/* Input */
 
 .input-area {
     display: flex;
     gap: 10px;
     margin-top: 20px;
+
+    flex-shrink: 0;
 }
 
 .input-area input {
@@ -139,4 +171,62 @@ nav {
     background: #2ecc71;
     color: white;
     cursor: pointer;
+}
+
+.input-area button:hover {
+    background: #27ae60;
+}
+
+/* Scrollbar Styling */
+
+.messages::-webkit-scrollbar,
+.groups::-webkit-scrollbar,
+.channels::-webkit-scrollbar,
+.online-users::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messages::-webkit-scrollbar-track,
+.groups::-webkit-scrollbar-track,
+.channels::-webkit-scrollbar-track,
+.online-users::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.messages::-webkit-scrollbar-thumb,
+.groups::-webkit-scrollbar-thumb,
+.channels::-webkit-scrollbar-thumb,
+.online-users::-webkit-scrollbar-thumb {
+    background: #bdbdbd;
+    border-radius: 4px;
+}
+
+.messages::-webkit-scrollbar-thumb:hover,
+.groups::-webkit-scrollbar-thumb:hover,
+.channels::-webkit-scrollbar-thumb:hover,
+.online-users::-webkit-scrollbar-thumb:hover {
+    background: #9b9b9b;
+}
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.delete-message-btn {
+    background: #ef4444;
+    color: white;
+
+    border: none;
+    border-radius: 5px;
+
+    padding: 6px 10px;
+
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.delete-message-btn:hover {
+    background: #dc2626;
 }

@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth.routes');
 const groupRoutes = require('./routes/group.routes');
 const channelRoutes = require('./routes/channel.routes');
 const adminRoutes = require('./routes/admin.routes');
+const messageRoutes = require('./routes/messages.routes')
 
 const app = express();
 
@@ -26,6 +27,7 @@ async function main() {
 app.use(cors());
 app.use(express.json());
 
+app.use('/api',messageRoutes(client))
 app.use('/api', authRoutes(client));
 app.use('/api', groupRoutes(client));
 app.use('/api', channelRoutes(client));

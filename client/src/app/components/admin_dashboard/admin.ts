@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -28,7 +28,8 @@ export class Admin implements OnInit {
     private router: Router,
     private authService: AuthService,
     private userService: UserService,
-    private groupService: GroupService
+    private groupService: GroupService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -57,6 +58,7 @@ export class Admin implements OnInit {
 
         this.users = users;
         this.totalUsers = users.length;
+        this.cdr.detectChanges();
 
       });
 
@@ -66,6 +68,7 @@ export class Admin implements OnInit {
 
         this.groups = groups;
         this.totalGroups = groups.length;
+        this.cdr.detectChanges();
 
       });
 
@@ -75,6 +78,7 @@ export class Admin implements OnInit {
 
         this.groupRequests = requests;
         this.pendingRequests = requests.length;
+        this.cdr.detectChanges();
 
       });
 

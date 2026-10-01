@@ -1,74 +1,170 @@
 <nav>
+
     <h1>Chat Application</h1>
 
     <div class="nav-buttons">
         <button>Profile</button>
         <button (click)="logout()">Logout</button>
     </div>
+
 </nav>
 
 <div class="container">
 
+    <!-- GROUPS -->
+
     <aside class="groups">
+
         <h2>Groups</h2>
 
         <ul>
-            <li>Technology</li>
-            <li>Sports</li>
-            <li>Music</li>
-            <li>Programming</li>
+
+            <li
+                *ngFor="let group of groups"
+                (click)="selectGroup(group)"
+                [class.active]="currentGroup?.id === group.id">
+
+                {{ group.title }}
+
+            </li>
+
         </ul>
 
-        <button routerLink="/groups">Create Group</button>
+        <button routerLink="/groups">
+            Create Group
+        </button>
+
     </aside>
 
-    <aside class="channels">
-        <h2>Channels</h2>
+    <!-- CHANNELS -->
+
+    <aside
+        class="channels"
+        *ngIf="currentGroup">
+
+        <h2>
+
+            Channels
+
+            <span>
+                - {{ currentGroup.title }}
+            </span>
+
+        </h2>
 
         <ul>
-            <li># General</li>
-            <li># News</li>
-            <li># Support</li>
-            <li># Random</li>
+
+            <li
+                *ngFor="let channel of channels"
+                (click)="selectChannel(channel)"
+                [class.active]="currentChannel?.id === channel.id">
+
+                # {{ channel.name }}
+
+            </li>
+
         </ul>
 
-        <button routerLink="/channels">Create Channel</button>
+        <button routerLink="/channels">
+            Create Channel
+        </button>
+
     </aside>
+
+    <!-- CHAT -->
 
     <section class="chat-area">
 
-        <div class="messages">
+    <div
+        *ngIf="!currentGroup"
+        class="messages">
 
-            <div class="message">
-                <strong>User1:</strong> Hello everyone!
+        Select a group to view channels.
+
+    </div>
+
+    <div
+        *ngIf="currentGroup && !currentChannel"
+        class="messages">
+
+        Select a channel to start chatting.
+
+    </div>
+
+    <div
+        *ngIf="currentChannel"
+        class="messages">
+
+        <div
+            class="message"
+            *ngFor="let message of messages">
+
+            <div class="message-header">
+
+                <strong>
+                    {{ message.senderName }}
+                </strong>
+
+                <button
+                    class="delete-message-btn"
+                    *ngIf="message.senderID === authService.getCurrentUser().id"
+                    (click)="deleteMessage(message.id)">
+
+                    Delete
+
+                </button>
+
             </div>
 
-            <div class="message">
-                <strong>User2:</strong> Welcome to the channel.
-            </div>
-
-            <div class="message">
-                <strong>User3:</strong> How is everyone doing?
-            </div>
+            {{ message.content }}
 
         </div>
 
-        <div class="input-area">
-            <input type="text" placeholder="Type a message...">
-            <button>Send</button>
+        <div
+            *ngIf="messages.length === 0"
+            class="message">
+
+            No messages in this channel yet.
+
         </div>
 
-    </section>
+    </div>
+
+    <div
+        class="input-area"
+        *ngIf="currentChannel">
+
+        <input
+            type="text"
+            [(ngModel)]="messageText"
+            placeholder="Type a message...">
+
+        <button
+            (click)="sendMessage()">
+
+            Send
+
+        </button>
+
+    </div>
+
+</section>
+
+    
 
     <aside class="online-users">
+
         <h2>Online Users</h2>
 
         <ul>
+
             <li>🟢 User1</li>
             <li>🟢 User2</li>
             <li>🟢 User3</li>
             <li>🟢 User4</li>
+
         </ul>
+
     </aside>
 
 </div>
