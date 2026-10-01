@@ -37,7 +37,18 @@ module.exports = function (client) {
         await db
             .collection('groups')
             .insertOne(newGroup);
-
+        await db
+            .collection('users')
+            .updateOne(
+                {
+                    id: request.requestedBy
+                },
+                {
+                    $set: {
+                        role: 'groupadmin'
+                    }
+                }
+            );
         await db
             .collection('groupRequests')
             .updateOne(
@@ -79,85 +90,6 @@ module.exports = function (client) {
 
         res.json({
             message: 'Group Request Rejected'
-        });
-
-    });
-
-    /* ------------------------------
-       Approves group membership request
-    ------------------------------ */
-
-    router.post('/group-membership-requests/:id/approve', async (req, res) => {
-
-        const db = client.db('chatapp');
-
-        const request = await db
-            .collection('groupMembershipRequests')
-            .findOne({
-                id: req.params.id
-            });
-
-        if (!request) {
-            return res.status(404).json({
-                message: 'Request not found'
-            });
-        }
-
-        await db
-            .collection('groups')
-            .updateOne(
-                {
-                    id: request.groupID
-                },
-                {
-                    $addToSet: {
-                        members: request.userID
-                    }
-                }
-            );
-
-        await db
-            .collection('groupMembershipRequests')
-            .updateOne(
-                {
-                    id: request.id
-                },
-                {
-                    $set: {
-                        status: 'approved'
-                    }
-                }
-            );
-
-        res.json({
-            message: 'Membership Approved'
-        });
-
-    });
-
-    /* ------------------------------
-       Rejects group membership request
-    ------------------------------ */
-
-    router.post('/group-membership-requests/:id/reject', async (req, res) => {
-
-        const db = client.db('chatapp');
-
-        await db
-            .collection('groupMembershipRequests')
-            .updateOne(
-                {
-                    id: req.params.id
-                },
-                {
-                    $set: {
-                        status: 'rejected'
-                    }
-                }
-            );
-
-        res.json({
-            message: 'Group Membership Request Rejected'
         });
 
     });

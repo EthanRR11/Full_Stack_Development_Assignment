@@ -16,5 +16,5 @@ export const routes: Routes = [
   { path: 'channels', component: Channels},
   { path: 'register', component: Register},
   { path: 'login',component: Register},
-  { path: 'bootstrap', component: Bootstrap}
+  { path: 'bootstrap', component: Bootstrap},
 ];

@@ -19,14 +19,29 @@
 
         <ul>
 
-            <li
-                *ngFor="let group of groups"
-                (click)="selectGroup(group)"
-                [class.active]="currentGroup?.id === group.id">
+            <li *ngFor="let group of groups">
 
-                {{ group.title }}
+    <span>
+        {{ group.title }}
+    </span>
 
-            </li>
+    <button
+        *ngIf="isMember(group)"
+        (click)="selectGroup(group)">
+
+        Open
+
+    </button>
+
+    <button
+        *ngIf="!isMember(group)"
+        (click)="requestMembership(group)">
+
+        Request Access
+
+    </button>
+
+</li>
 
         </ul>
 
@@ -152,19 +167,119 @@
 
     
 
-    <aside class="online-users">
+    <!-- NORMAL USER PANEL -->
 
-        <h2>Online Users</h2>
+<aside
+    class="online-users"
+    *ngIf="!currentGroup || !isAdmin(currentGroup)">
 
-        <ul>
+    <h2>Online Users</h2>
 
-            <li>🟢 User1</li>
-            <li>🟢 User2</li>
-            <li>🟢 User3</li>
-            <li>🟢 User4</li>
+    <ul>
 
-        </ul>
+        <li>🟢 User1</li>
+        <li>🟢 User2</li>
+        <li>🟢 User3</li>
+        <li>🟢 User4</li>
 
-    </aside>
+    </ul>
+
+</aside>
+
+<!-- GROUP ADMIN PANEL -->
+
+<aside
+    class="online-users"
+    *ngIf="currentGroup && isAdmin(currentGroup)">
+
+    <h2>Membership Requests</h2>
+
+    <div
+        class="message"
+        *ngFor="let request of membershipRequests">
+
+        <strong>
+            {{ request.userID }}
+        </strong>
+
+        <div class="admin-actions">
+
+            <button
+                class="approve-btn"
+                (click)="approveMembership(request.id)">
+
+                ✓
+
+            </button>
+
+            <button
+                class="reject-btn"
+                (click)="rejectMembership(request.id)">
+
+                ✗
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <h2>Channel Requests</h2>
+
+    <div
+        class="message"
+        *ngFor="let request of channelRequests">
+
+        <strong>
+            {{ request.name }}
+        </strong>
+
+        <div class="admin-actions">
+
+            <button
+                class="approve-btn"
+                (click)="approveChannel(request.id)">
+
+                ✓
+
+            </button>
+
+            <button
+                class="reject-btn"
+                (click)="rejectChannel(request.id)">
+
+                ✗
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <h2>Group Members</h2>
+
+    <ul>
+
+        <li
+            *ngFor="let member of groupMembers"
+            class="member-item">
+
+            <span>
+                {{ member.username || member }}
+            </span>
+
+            <button
+                class="remove-member-btn"
+                (click)="removeMember(member.id || member)">
+
+                Remove
+
+            </button>
+
+</li>
+
+    </ul>
+
+</aside>
 
 </div>

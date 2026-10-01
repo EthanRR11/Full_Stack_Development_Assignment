@@ -1,28 +1,52 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // Added ChangeDetectorRef
-import { Router, RouterLink } from '@angular/router';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef
+} from '@angular/core';
+
+import {
+  Router,
+  RouterLink
+} from '@angular/router';
 
 import { AuthService } from '../../services/auth';
 import { GroupService } from '../../services/group';
 import { ChannelService } from '../../services/channel';
 import { MessageService } from '../../services/message';
+
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink, CommonModule, FormsModule],
+  imports: [
+    RouterLink,
+    CommonModule,
+    FormsModule
+  ],
   standalone: true,
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css',
+  styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
 
   currentGroup: any = null;
+
   currentChannel: any = null;
+
   messages: any[] = [];
+
   messageText = '';
+
   groups: any[] = [];
+
   channels: any[] = [];
+
+  membershipRequests: any[] = [];
+
+  channelRequests: any[] = [];
+
+  groupMembers: any[] = [];
 
   constructor(
     private router: Router,
@@ -30,32 +54,40 @@ export class Dashboard implements OnInit {
     private groupService: GroupService,
     private channelService: ChannelService,
     private messageService: MessageService,
-    private cdr: ChangeDetectorRef 
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
+
     if (!this.authService.isloggedIn()) {
+
       this.router.navigate(['/']);
+
       return;
+
     }
 
     this.groupService
       .getGroups()
       .subscribe({
         next: (groups: any) => {
-          console.log('API Returned:', groups);
+
           this.groups = groups;
-          console.log('After Assign:', this.groups);
-          this.cdr.detectChanges(); 
+
+          this.cdr.detectChanges();
+
         }
       });
+
   }
 
+  selectGroup(group: any) {
 
-
-  selectGroup(group: any) { 
     this.currentGroup = group;
+
     this.currentChannel = null;
+
+    this.messages = [];
 
     localStorage.setItem(
       'currentGroup',
@@ -65,12 +97,23 @@ export class Dashboard implements OnInit {
     this.channelService
       .getChannels(group.id)
       .subscribe((channels: any) => {
+
         this.channels = channels;
-        this.cdr.detectChanges(); 
+
+        if (this.isAdmin(group)) {
+
+          this.loadAdminData();
+
+        }
+
+        this.cdr.detectChanges();
+
       });
+
   }
 
   selectChannel(channel: any) {
+
     this.currentChannel = channel;
 
     localStorage.setItem(
@@ -81,64 +124,256 @@ export class Dashboard implements OnInit {
     this.messageService
       .getMessages(channel.id)
       .subscribe((messages: any) => {
+
         this.messages = messages;
-        this.cdr.detectChanges(); 
+
+        this.cdr.detectChanges();
+
       });
+
   }
 
   sendMessage() {
+
     if (!this.currentChannel) {
+
       alert('Please select a channel');
+
       return;
+
     }
 
-    const currentUser = this.authService.getCurrentUser();
+    const currentUser =
+      this.authService.getCurrentUser();
 
     const newMessage = {
+
       senderID: currentUser.id,
+
       senderName: currentUser.username,
+
       channelID: this.currentChannel.id,
+
       content: this.messageText
+
     };
 
     this.messageService
       .sendMessage(newMessage)
       .subscribe(() => {
+
         this.messageText = '';
+
         this.messageService
           .getMessages(this.currentChannel.id)
           .subscribe((messages: any) => {
-            this.messages = messages;
-            this.cdr.detectChanges(); 
-          });
-      });
-  }
 
+            this.messages = messages;
+
+            this.cdr.detectChanges();
+
+          });
+
+      });
+
+  }
 
   deleteMessage(id: string) {
 
-  if (!confirm('Delete this message?')) {
-    return;
+    if (!confirm('Delete this message?')) {
+
+      return;
+
+    }
+
+    this.messageService
+      .deleteMessage(id)
+      .subscribe(() => {
+
+        this.messageService
+          .getMessages(this.currentChannel.id)
+          .subscribe((messages: any) => {
+
+            this.messages = messages;
+
+            this.cdr.detectChanges();
+
+          });
+
+      });
+
   }
 
-  this.messageService
-    .deleteMessage(id)
+  isMember(group: any): boolean {
+
+    const currentUser =
+      this.authService.getCurrentUser();
+
+    return (
+      group.members &&
+      group.members.includes(currentUser.id)
+    );
+
+  }
+
+  requestMembership(group: any) {
+
+    const currentUser =
+      this.authService.getCurrentUser();
+
+    const request = {
+
+      groupID: group.id,
+
+      userID: currentUser.id
+
+    };
+
+    this.groupService
+      .createMembershipRequest(request)
+      .subscribe(() => {
+
+        alert(
+          'Membership request submitted'
+        );
+
+      });
+
+  }
+
+  isAdmin(group: any): boolean {
+
+    const currentUser =
+      this.authService.getCurrentUser();
+
+    return (
+      group.admins &&
+      group.admins.includes(currentUser.id)
+    );
+
+  }
+
+  loadAdminData() {
+
+    if (!this.currentGroup) {
+
+      return;
+
+    }
+
+    this.groupService
+      .getMembershipRequests(
+        this.currentGroup.id
+      )
+      .subscribe((requests: any) => {
+
+        this.membershipRequests =
+          requests;
+
+        this.cdr.detectChanges();
+
+      });
+
+    this.channelService
+      .getChannelRequests(
+        this.currentGroup.id
+      )
+      .subscribe((requests: any) => {
+
+        this.channelRequests =
+          requests;
+
+        this.cdr.detectChanges();
+
+      });
+
+    this.groupService
+      .getGroupMembers(
+        this.currentGroup.id
+      )
+      .subscribe((members: any) => {
+
+        this.groupMembers = members;
+
+        this.cdr.detectChanges();
+
+      });
+
+  }
+
+  approveMembership(id: string) {
+
+    this.groupService
+      .approveMembership(id)
+      .subscribe(() => {
+
+        this.loadAdminData();
+
+      });
+
+  }
+
+  rejectMembership(id: string) {
+
+    this.groupService
+      .rejectMembership(id)
+      .subscribe(() => {
+
+        this.loadAdminData();
+
+      });
+
+  }
+
+  approveChannel(id: string) {
+
+    this.channelService
+      .approveChannelRequests(id)
+      .subscribe(() => {
+
+        this.loadAdminData();
+
+      });
+
+  }
+
+  rejectChannel(id: string) {
+
+    this.channelService
+      .rejectChannelRequests(id)
+      .subscribe(() => {
+
+        this.loadAdminData();
+
+      });
+
+  }
+
+
+   removeMember(userID: string) {
+
+  if (!confirm('Remove this member?')) {
+
+    return;
+
+  }
+
+  this.groupService
+    .removeMember(
+      this.currentGroup.id,
+      userID
+    )
     .subscribe(() => {
 
-      this.messageService
-        .getMessages(this.currentChannel.id)
-        .subscribe((messages: any) => {
-
-          this.messages = messages;
-
-          this.cdr.detectChanges();
-
-        });
+      this.loadAdminData();
 
     });
 
 }
+
   logout() {
+
     this.authService.logout();
+
   }
 }

@@ -146,7 +146,7 @@ module.exports = function(client) {
         };
 
         await db
-            .collection('groupMembershipRequest')
+            .collection('groupMembershipRequests')
             .insertOne(groupMembershipRequest);
 
         res.json({
@@ -160,13 +160,14 @@ module.exports = function(client) {
        Get Group Membership Requests
     ------------------------------ */
 
-    router.get('/group-membership-requests', async (req, res) => {
+    router.get('/group-membership-requests/:groupID', async (req, res) => {
 
         const db = client.db('chatapp');
 
         const requests = await db
             .collection('groupMembershipRequests')
             .find({
+                groupID: req.params.groupID,
                 status: 'pending'
             })
             .toArray();
@@ -174,7 +175,7 @@ module.exports = function(client) {
         res.json(requests);
 
     });
-
-    return router;
+    
+    return router
 
 };

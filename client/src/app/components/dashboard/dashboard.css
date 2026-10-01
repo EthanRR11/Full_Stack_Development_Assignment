@@ -230,3 +230,113 @@ nav {
 .delete-message-btn:hover {
     background: #dc2626;
 }
+
+.admin-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.admin-card {
+    background: #eef2f7;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.approve-btn {
+    background: #22c55e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.reject-btn {
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.approve-btn:hover {
+    background: #16a34a;
+}
+
+.reject-btn:hover {
+    background: #dc2626;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.approve-btn {
+    background: #22c55e;
+    color: white;
+
+    border: none;
+    border-radius: 5px;
+
+    padding: 6px 10px;
+
+    cursor: pointer;
+}
+
+.reject-btn {
+    background: #ef4444;
+    color: white;
+
+    border: none;
+    border-radius: 5px;
+
+    padding: 6px 10px;
+
+    cursor: pointer;
+}
+
+.approve-btn:hover {
+    background: #16a34a;
+}
+
+.reject-btn:hover {
+    background: #dc2626;
+}
+
+.member-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 10px;
+    margin-bottom: 8px;
+
+    background: #eef2f7;
+    border-radius: 6px;
+}
+
+.remove-member-btn {
+    background: #ef4444;
+    color: white;
+
+    border: none;
+    border-radius: 5px;
+
+    padding: 6px 10px;
+
+    cursor: pointer;
+}
+
+.remove-member-btn:hover {
+    background: #dc2626;
+}

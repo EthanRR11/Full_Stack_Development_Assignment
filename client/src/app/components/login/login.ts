@@ -57,13 +57,6 @@ export class Login implements OnInit {
           ]);
 
         }
-        else if (user.role === 'groupadmin') {
-
-          this.router.navigate([
-            '/group-admin'
-          ]);
-
-        }
         else {
 
           this.router.navigate([

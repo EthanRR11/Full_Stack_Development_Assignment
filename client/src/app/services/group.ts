@@ -14,12 +14,49 @@ export class GroupService {
         localStorage.setItem('currentGroup',JSON.stringify(group))
     }
 
-    getCurrentGroup(){
-        
-    }
+
+    getGroupMembers(groupID: string) {
+
+    return this.http.get(
+    `http://localhost:3000/api/group-members/${groupID}`
+  );
+
+}
+
+    getMembershipRequests(groupID: string) {
+
+  return this.http.get(
+    `http://localhost:3000/api/group-membership-requests/${groupID}`
+  );
+
+}
 
 
+    createMembershipRequest(request: any) {
 
+  return this.http.post(
+    'http://localhost:3000/api/group-membership-requests',
+    request
+  );
+
+}
+    approveMembership(id: string) {
+
+  return this.http.post(
+    `http://localhost:3000/api/group-membership-requests/${id}/approve`,
+    {}
+  );
+
+}
+
+    rejectMembership(id: string) {
+
+  return this.http.post(
+    `http://localhost:3000/api/group-membership-requests/${id}/reject`,
+    {}
+  );
+
+}
 
 
     createGroupRequest(group: any){
@@ -56,6 +93,17 @@ export class GroupService {
     );
 
 }
+    removeMember(groupID: string,userID: string) {
+        
+    return this.http.post(
+    'http://localhost:3000/api/group-members/remove',
+    {
+      groupID,
+      userID
+    }
+  );
+
+}
 
     rejectGroupRequest(id: string) {
 
@@ -63,5 +111,4 @@ export class GroupService {
         `http://localhost:3000/api/group-requests/${id}/reject`,
         {}
     );
-
 }};

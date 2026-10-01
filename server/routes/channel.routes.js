@@ -62,23 +62,27 @@ module.exports = function(client) {
     });
 
     /* ------------------------------
-       Gets Channel requests
-    ------------------------------ */
+   Gets Channel Requests
+------------------------------ */
 
-    router.get('/channel-creation-requests', async (req, res) => {
+router.get(
+    '/channel-creation-requests/:groupID',
+    async (req, res) => {
 
         const db = client.db('chatapp');
 
-        const request = await db
+        const requests = await db
             .collection('ChannelCreationRequests')
             .find({
+                groupID: req.params.groupID,
                 status: 'pending'
             })
             .toArray();
 
-        res.json(request);
+        res.json(requests);
 
-    });
+    }
+);
 
     /* ------------------------------
        Gets Channels by groupID
