@@ -226,3 +226,47 @@ body {
 .action-btn:hover {
     background: #1d4ed8;
 }
+/* Action Buttons */
+
+.panel button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+/* Approve */
+
+.approve-btn {
+    background: #22c55e;
+    color: white;
+}
+
+.approve-btn:hover {
+    background: #16a34a;
+}
+
+/* Reject */
+
+.reject-btn {
+    background: #ef4444;
+    color: white;
+}
+
+.reject-btn:hover {
+    background: #dc2626;
+}
+
+/* Delete */
+
+.delete-btn {
+    background: #f91616;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #ea0c0c;
+}

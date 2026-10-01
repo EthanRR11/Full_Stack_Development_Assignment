@@ -240,6 +240,70 @@ module.exports = function (client) {
 
     });
 
+     /* ------------------------------
+       Gets all users
+    ------------------------------ */
+
+    router.get('/users', async (req, res) => {
+
+
+        const db = client.db('chatapp')
+
+        user = await db
+        .collection('users')
+        .find({})
+        .toArray()
+
+
+        res.json(user)
+
+    })
+
+     /* ------------------------------
+       Gets a specific user
+    ------------------------------ */
+    router.get('/users/:userid', async (req, res) => {
+
+        const db = client.db('chatapp')
+
+        const user = await db
+        .collection('users')
+        .findOne({
+            id: req.params.userid
+        })
+
+        if (!user){
+            return res.status(404).json({
+                message: 'User not found'
+            })
+        }
+
+        res.json(user)
+
+
+    })
+
+     /* ------------------------------
+       Deletes a user
+    ------------------------------ */
+    router.delete('/users/:userid', async (req,res) =>{
+
+        const db = client.db('chatapp')
+
+        const user = await db
+        .collection('users')
+        .deleteOne({
+            id: req.params.userid
+        })
+        
+        res.json({
+            message: 'User deleted'
+        })
+
+    })
+
+
+
     return router;
 
 };

@@ -1,4 +1,5 @@
 <nav class="navbar">
+
     <div class="logo">
         <h2>Chat Application</h2>
     </div>
@@ -8,86 +9,214 @@
         <button>Profile</button>
         <button (click)="logout()">Logout</button>
     </div>
+
 </nav>
 
 <div class="dashboard-container">
 
-    
     <aside class="sidebar">
+
         <ul>
-            <li class="active">Dashboard</li>
-            <li>User Management</li>
-            <li>Group Requests</li>
-            <li>Audit Logs</li>
-            <li>System Notifications</li>
-            <li>Banned Users</li>
-            <li>System Settings</li>
+
+            <li (click)="activePanel='dashboard'">
+                Dashboard
+            </li>
+
+            <li (click)="activePanel='users'">
+                User Management
+            </li>
+
+            <li (click)="activePanel='requests'">
+                Group Requests
+            </li>
+
+            <li (click)="activePanel='logs'">
+                Audit Logs
+            </li>
+
+            <li (click)="activePanel='notifications'">
+                System Notifications
+            </li>
+
+            <li>
+                Banned Users
+            </li>
+
+            <li>
+                System Settings
+            </li>
+
         </ul>
+
     </aside>
 
-   
     <main class="main-content">
 
-        <div class="top-section">
 
-            <div class="stats-grid">
+        <div *ngIf="activePanel === 'dashboard'">
 
-                <div class="card">
-                    <h3>Total Users</h3>
-                    <p>1,243</p>
+            <div class="top-section">
+
+                <div class="stats-grid">
+
+                    <div class="card">
+                        <h3>Total Users</h3>
+                        <p>{{ totalUsers }}</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Total Groups</h3>
+                        <p>{{ totalGroups }}</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Pending Requests</h3>
+                        <p>{{ pendingRequests }}</p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Banned Users</h3>
+                        <p>0</p>
+                    </div>
+
                 </div>
 
-                <div class="card">
-                    <h3>Total Groups</h3>
-                    <p>156</p>
-                </div>
+                <div class="notification-panel">
 
-                <div class="card">
-                    <h3>Pending Requests</h3>
-                    <p>12</p>
-                </div>
+                    <h3>System Notification</h3>
 
-                <div class="card">
-                    <h3>Banned Users</h3>
-                    <p>15</p>
+                    <textarea
+                        placeholder="Send a message to all users..."
+                    ></textarea>
+
+                    <button>Send</button>
+
                 </div>
 
             </div>
 
-            <div class="notification-panel">
-                <h3>System Notification</h3>
+            <div class="bottom-section">
 
-                <textarea
-                    placeholder="Send a message to all users..."
-                ></textarea>
+                <div class="panel">
 
-                <button>Send</button>
+                    <h3>Pending Group Requests</h3>
+
+                    <ul>
+
+                        <li *ngFor="let request of groupRequests">
+
+                            {{ request.title }}
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <div class="panel">
+
+                    <h3>Recent Audit Logs</h3>
+
+                    <p>No audit logs available.</p>
+
+                </div>
+
             </div>
 
         </div>
 
-        <div class="bottom-section">
+        
+
+        <div *ngIf="activePanel === 'users'">
 
             <div class="panel">
+
+                <h3>User Management</h3>
+
+                <ul>
+
+                    <li *ngFor="let user of users">
+
+                        {{ user.username }}
+
+                        <button
+                            class = 'delete-btn'
+                            (click)="deleteUser(user.id)">
+                            Delete
+                        </button>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+       
+
+        <div *ngIf="activePanel === 'requests'">
+
+            <div class="panel">
+
                 <h3>Pending Group Requests</h3>
 
                 <ul>
-                    <li>Gaming Community Request</li>
-                    <li>IT Students Club</li>
-                    <li>AI Discussion Group</li>
-                    <li>Cyber Security Hub</li>
+
+                    <li *ngFor="let request of groupRequests">
+
+                        {{ request.title }}
+
+                        <button
+                            class = 'approve-btn'
+                            (click)="approveRequest(request.id)">
+                            Approve
+                        </button>
+
+                        <button
+                            class = 'reject-btn'
+                            (click)="rejectRequest(request.id)">
+                            Reject
+                        </button>
+
+                    </li>
+
                 </ul>
+
             </div>
 
-            <div class="panel">
-                <h3>Recent Audit Logs</h3>
+        </div>
 
-                <ul>
-                    <li>User1 created channel #support</li>
-                    <li>Admin banned User5</li>
-                    <li>New group approved</li>
-                    <li>Password reset performed</li>
-                </ul>
+        
+
+        <div *ngIf="activePanel === 'logs'">
+
+            <div class="panel">
+
+                <h3>Audit Logs</h3>
+
+                <p>Audit logs will appear here.</p>
+
+            </div>
+
+        </div>
+
+        <div *ngIf="activePanel === 'notifications'">
+
+            <div class="panel">
+
+                <h3>System Notifications</h3>
+
+                <textarea
+                    placeholder="Enter notification..."
+                ></textarea>
+
+                <br><br>
+
+                <button>
+                    Send Notification
+                </button>
+
             </div>
 
         </div>

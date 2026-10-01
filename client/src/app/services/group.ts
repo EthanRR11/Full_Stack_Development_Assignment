@@ -12,8 +12,16 @@ export class GroupService {
 
     setCurrentGroup(group: any){
         localStorage.setItem('currentGroup',JSON.stringify(group))
-
     }
+
+    getCurrentGroup(){
+        
+    }
+
+
+
+
+
     createGroupRequest(group: any){
         return this.http.post(
             'http://localhost:3000/api/group-requests',
@@ -40,7 +48,7 @@ export class GroupService {
     }
 
 
-    approveGroupRequest(id: number) {
+    approveGroupRequest(id: string) {
 
     return this.http.post(
         `http://localhost:3000/api/group-requests/${id}/approve`,
@@ -49,7 +57,7 @@ export class GroupService {
 
 }
 
-    rejectGroupRequest(id: number) {
+    rejectGroupRequest(id: string) {
 
     return this.http.post(
         `http://localhost:3000/api/group-requests/${id}/reject`,

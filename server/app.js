@@ -2,10 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const { MongoClient } = require('mongodb');
 
-const authRoutes = require('./routes/authRoutes');
-const groupRoutes = require('./routes/groupRoutes');
-const channelRoutes = require('./routes/channelRoutes');
-const adminRoutes = require('./routes/adminRoutes');
+const authRoutes = require('./routes/auth.routes');
+const groupRoutes = require('./routes/group.routes');
+const channelRoutes = require('./routes/channel.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 const app = express();
 
