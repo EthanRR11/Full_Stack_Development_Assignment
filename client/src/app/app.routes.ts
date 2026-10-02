@@ -7,6 +7,7 @@ import { Groups } from './components/groups/groups';
 import { Channels } from './components/channels/channels';
 import { Register } from './components/register/register';
 import { Bootstrap } from './components/bootstrap/bootstrap';
+import { Profile } from './components/profile/profile';
 
 export const routes: Routes = [
   { path: '', component: Login },
@@ -17,4 +18,5 @@ export const routes: Routes = [
   { path: 'register', component: Register},
   { path: 'login',component: Register},
   { path: 'bootstrap', component: Bootstrap},
+  { path: 'profile', component: Profile}
 ];

@@ -33,7 +33,7 @@ module.exports = function(client) {
 
 
         /* ------------------------------
-       get message for a channel
+       gets messages for a channel
     ------------------------------ */
 
     router.get('/messages/:channelID', async (req, res) =>{

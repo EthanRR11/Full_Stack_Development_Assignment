@@ -21,27 +21,23 @@
 
             <li *ngFor="let group of groups">
 
-    <span>
-        {{ group.title }}
-    </span>
+                <span>
+                    {{ group.title }}
+                </span>
 
-    <button
-        *ngIf="isMember(group)"
-        (click)="selectGroup(group)">
+                <button *ngIf="isMember(group)" (click)="selectGroup(group)">
 
-        Open
+                    Open
 
-    </button>
+                </button>
 
-    <button
-        *ngIf="!isMember(group)"
-        (click)="requestMembership(group)">
+                <button *ngIf="!isMember(group)" (click)="requestMembership(group)">
 
-        Request Access
+                    Request Access
 
-    </button>
+                </button>
 
-</li>
+            </li>
 
         </ul>
 
@@ -53,9 +49,7 @@
 
     <!-- CHANNELS -->
 
-    <aside
-        class="channels"
-        *ngIf="currentGroup">
+    <aside class="channels" *ngIf="currentGroup">
 
         <h2>
 
@@ -69,9 +63,7 @@
 
         <ul>
 
-            <li
-                *ngFor="let channel of channels"
-                (click)="selectChannel(channel)"
+            <li *ngFor="let channel of channels" (click)="selectChannel(channel)"
                 [class.active]="currentChannel?.id === channel.id">
 
                 # {{ channel.name }}
@@ -90,196 +82,163 @@
 
     <section class="chat-area">
 
-    <div
-        *ngIf="!currentGroup"
-        class="messages">
+        <div *ngIf="!currentGroup" class="messages">
 
-        Select a group to view channels.
+            Select a group to view channels.
 
-    </div>
+        </div>
 
-    <div
-        *ngIf="currentGroup && !currentChannel"
-        class="messages">
+        <div *ngIf="currentGroup && !currentChannel" class="messages">
 
-        Select a channel to start chatting.
+            Select a channel to start chatting.
 
-    </div>
+        </div>
 
-    <div
-        *ngIf="currentChannel"
-        class="messages">
+        <div *ngIf="currentChannel" class="messages">
 
-        <div
-            class="message"
-            *ngFor="let message of messages">
+            <div class="message" *ngFor="let message of messages">
 
-            <div class="message-header">
+                <div class="message-header">
 
-                <strong>
-                    {{ message.senderName }}
-                </strong>
+                    <strong>
+                        {{ message.senderName }}
+                    </strong>
 
-                <button
-                    class="delete-message-btn"
-                    *ngIf="message.senderID === authService.getCurrentUser().id"
-                    (click)="deleteMessage(message.id)">
+                    <button class="delete-message-btn" *ngIf="message.senderID === authService.getCurrentUser().id"
+                        (click)="deleteMessage(message.id)">
 
-                    Delete
+                        Delete
+
+                    </button>
+
+                </div>
+
+                {{ message.content }}
+
+            </div>
+
+            <div *ngIf="messages.length === 0" class="message">
+
+                No messages in this channel yet.
+
+            </div>
+
+        </div>
+
+        <div class="input-area" *ngIf="currentChannel">
+
+            <input type="text" [(ngModel)]="messageText" placeholder="Type a message...">
+
+            <button (click)="sendMessage()">
+
+                Send
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- NORMAL USER PANEL -->
+
+    <aside class="online-users" *ngIf="currentChannel && (!currentGroup || !isAdmin(currentGroup))">
+
+        <h2>Online Users</h2>
+
+        <ul>
+
+            <li *ngFor="
+      let user
+      of onlineUsers
+    ">
+
+                🟢 {{ user }}
+
+            </li>
+            ``
+
+        </ul>
+
+    </aside>
+
+    <!-- GROUP ADMIN PANEL -->
+
+    <aside class="online-users" *ngIf="currentGroup && isAdmin(currentGroup)">
+
+        <h2>Membership Requests</h2>
+
+        <div class="message" *ngFor="let request of membershipRequests">
+
+            <strong>
+                {{ request.userID }}
+            </strong>
+
+            <div class="admin-actions">
+
+                <button class="approve-btn" (click)="approveMembership(request.id)">
+
+                    ✓
+
+                </button>
+
+                <button class="reject-btn" (click)="rejectMembership(request.id)">
+
+                    ✗
 
                 </button>
 
             </div>
 
-            {{ message.content }}
+        </div>
+
+        <h2>Channel Requests</h2>
+
+        <div class="message" *ngFor="let request of channelRequests">
+
+            <strong>
+                {{ request.name }}
+            </strong>
+
+            <div class="admin-actions">
+
+                <button class="approve-btn" (click)="approveChannel(request.id)">
+
+                    ✓
+
+                </button>
+
+                <button class="reject-btn" (click)="rejectChannel(request.id)">
+
+                    ✗
+
+                </button>
+
+            </div>
 
         </div>
 
-        <div
-            *ngIf="messages.length === 0"
-            class="message">
+        <h2>Group Members</h2>
 
-            No messages in this channel yet.
+        <ul>
 
-        </div>
+            <li *ngFor="let member of groupMembers" class="member-item">
 
-    </div>
+                <span>
+                    {{ member.username || member }}
+                </span>
 
-    <div
-        class="input-area"
-        *ngIf="currentChannel">
+                <button class="remove-member-btn" (click)="removeMember(member.id || member)">
 
-        <input
-            type="text"
-            [(ngModel)]="messageText"
-            placeholder="Type a message...">
+                    Remove
 
-        <button
-            (click)="sendMessage()">
+                </button>
 
-            Send
+            </li>
 
-        </button>
+        </ul>
 
-    </div>
-
-</section>
-
-    
-
-    <!-- NORMAL USER PANEL -->
-
-<aside
-    class="online-users"
-    *ngIf="!currentGroup || !isAdmin(currentGroup)">
-
-    <h2>Online Users</h2>
-
-    <ul>
-
-        <li>🟢 User1</li>
-        <li>🟢 User2</li>
-        <li>🟢 User3</li>
-        <li>🟢 User4</li>
-
-    </ul>
-
-</aside>
-
-<!-- GROUP ADMIN PANEL -->
-
-<aside
-    class="online-users"
-    *ngIf="currentGroup && isAdmin(currentGroup)">
-
-    <h2>Membership Requests</h2>
-
-    <div
-        class="message"
-        *ngFor="let request of membershipRequests">
-
-        <strong>
-            {{ request.userID }}
-        </strong>
-
-        <div class="admin-actions">
-
-            <button
-                class="approve-btn"
-                (click)="approveMembership(request.id)">
-
-                ✓
-
-            </button>
-
-            <button
-                class="reject-btn"
-                (click)="rejectMembership(request.id)">
-
-                ✗
-
-            </button>
-
-        </div>
-
-    </div>
-
-    <h2>Channel Requests</h2>
-
-    <div
-        class="message"
-        *ngFor="let request of channelRequests">
-
-        <strong>
-            {{ request.name }}
-        </strong>
-
-        <div class="admin-actions">
-
-            <button
-                class="approve-btn"
-                (click)="approveChannel(request.id)">
-
-                ✓
-
-            </button>
-
-            <button
-                class="reject-btn"
-                (click)="rejectChannel(request.id)">
-
-                ✗
-
-            </button>
-
-        </div>
-
-    </div>
-
-    <h2>Group Members</h2>
-
-    <ul>
-
-        <li
-            *ngFor="let member of groupMembers"
-            class="member-item">
-
-            <span>
-                {{ member.username || member }}
-            </span>
-
-            <button
-                class="remove-member-btn"
-                (click)="removeMember(member.id || member)">
-
-                Remove
-
-            </button>
-
-</li>
-
-    </ul>
-
-</aside>
+    </aside>
 
 </div>

@@ -1,14 +1,8 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
-import {
-  Router,
-  RouterLink
-} from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
+import { SocketService } from '../../services/socket'
 import { AuthService } from '../../services/auth';
 import { GroupService } from '../../services/group';
 import { ChannelService } from '../../services/channel';
@@ -29,6 +23,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './dashboard.css'
 })
 export class Dashboard implements OnInit {
+
+  onlineUsers: string[] = [];
 
   currentGroup: any = null;
 
@@ -54,8 +50,9 @@ export class Dashboard implements OnInit {
     private groupService: GroupService,
     private channelService: ChannelService,
     private messageService: MessageService,
+    private socketService: SocketService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
 
@@ -78,6 +75,87 @@ export class Dashboard implements OnInit {
 
         }
       });
+
+    this.socketService.socket.on('receive-message',
+        (message: any) => {
+
+          if (
+            this.currentChannel &&
+            message.channelID ===
+            this.currentChannel.id
+          ) {
+
+            this.messages.push(
+              message
+            );
+
+            this.cdr.detectChanges();
+
+          }
+
+        }
+      );
+
+    this.socketService.socket.on('user-joined',(data: any) => {
+
+        console.log('USER JOINED', data);
+
+        this.messages.push({
+
+          senderName: 'System',
+
+          content: `${data.username} joined the channel`
+
+        });
+
+        this.cdr.detectChanges();
+
+      }
+    );
+
+    this.socketService.socket.on('user-left',(data: any) => {
+
+        this.messages.push({
+
+          senderName: 'System',
+
+          content:
+            `${data.username} left the channel`
+
+        });
+
+        this.cdr.detectChanges();
+
+      }
+    );
+
+    this.socketService.socket.on('membership-request-created',(request: any) => {
+
+        if (
+          this.currentGroup &&
+          request.groupID ===
+          this.currentGroup.id
+        ) {
+
+          this.membershipRequests.push(
+            request
+          );
+
+          this.cdr.detectChanges();
+
+        }
+
+      }
+    );
+
+    this.socketService.socket.on('online-users',(users: string[]) => {
+
+        this.onlineUsers = users;
+
+        this.cdr.detectChanges();
+
+      }
+    );
 
   }
 
@@ -114,7 +192,28 @@ export class Dashboard implements OnInit {
 
   selectChannel(channel: any) {
 
+    if (
+      this.currentChannel &&
+      this.currentChannel.id !== channel.id
+    ) {
+
+      this.socketService.leaveChannel(
+        this.currentChannel.id,
+        this.authService
+          .getCurrentUser()
+          .username
+      );
+
+    }
+
     this.currentChannel = channel;
+
+    this.socketService.joinChannel(
+      channel.id,
+      this.authService
+        .getCurrentUser()
+        .username
+    );
 
     localStorage.setItem(
       'currentChannel',
@@ -163,6 +262,8 @@ export class Dashboard implements OnInit {
       .subscribe(() => {
 
         this.messageText = '';
+
+        this.socketService.sendMessage(newMessage);
 
         this.messageService
           .getMessages(this.currentChannel.id)
@@ -350,26 +451,26 @@ export class Dashboard implements OnInit {
   }
 
 
-   removeMember(userID: string) {
+  removeMember(userID: string) {
 
-  if (!confirm('Remove this member?')) {
+    if (!confirm('Remove this member?')) {
 
-    return;
+      return;
+
+    }
+
+    this.groupService
+      .removeMember(
+        this.currentGroup.id,
+        userID
+      )
+      .subscribe(() => {
+
+        this.loadAdminData();
+
+      });
 
   }
-
-  this.groupService
-    .removeMember(
-      this.currentGroup.id,
-      userID
-    )
-    .subscribe(() => {
-
-      this.loadAdminData();
-
-    });
-
-}
 
   logout() {
 

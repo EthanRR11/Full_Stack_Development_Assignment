@@ -1,6 +1,6 @@
 const express = require('express');
 
-module.exports = function(client) {
+module.exports = function (client) {
 
     const router = express.Router();
 
@@ -47,37 +47,6 @@ module.exports = function(client) {
             .toArray();
 
         res.json(groups);
-
-    });
-
-    
-
-    /* ------------------------------
-       Assign User to Group
-    ------------------------------ */
-
-    router.post('/assign', async (req, res) => {
-
-        const db = client.db('chatapp');
-
-        const { userId, groupId } = req.body;
-
-        await db
-            .collection('groups')
-            .updateOne(
-                {
-                    id: groupId
-                },
-                {
-                    $addToSet: {
-                        members: userId
-                    }
-                }
-            );
-
-        res.json({
-            message: 'User Assigned'
-        });
 
     });
 
@@ -149,6 +118,11 @@ module.exports = function(client) {
             .collection('groupMembershipRequests')
             .insertOne(groupMembershipRequest);
 
+        req.app.get('io').emit(
+            'membership-request-created',
+            groupMembershipRequest
+        );
+
         res.json({
             message: 'Group Membership Requested',
             request: groupMembershipRequest
@@ -175,7 +149,7 @@ module.exports = function(client) {
         res.json(requests);
 
     });
-    
+
     return router
 
 };
