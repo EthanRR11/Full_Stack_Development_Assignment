@@ -1,9 +1,44 @@
 const express = require('express');
 
-module.exports = function(client) {
+module.exports = function (client) {
 
     const router = express.Router();
 
+
+    function calculateAge(dateOfBirth) {
+
+        const today = new Date();
+
+        const birthDate =
+            new Date(dateOfBirth);
+
+        let age =
+            today.getFullYear() -
+            birthDate.getFullYear();
+
+        const monthDifference =
+            today.getMonth() -
+            birthDate.getMonth();
+
+        if (
+
+            monthDifference < 0 ||
+
+            (
+                monthDifference === 0 &&
+                today.getDate() <
+                birthDate.getDate()
+            )
+
+        ) {
+
+            age--;
+
+        }
+
+        return age;
+
+    }
     /* ------------------------------
        Register User
     ------------------------------ */
@@ -14,9 +49,17 @@ module.exports = function(client) {
             email,
             username,
             password,
-            age,
+            dateOfBirth,
             role
         } = req.body;
+
+        if (!dateOfBirth) {
+
+            return res.status(400).json({
+                message: 'Date of birth is required'
+            });
+
+        }
 
         const db = client.db('chatapp');
 
@@ -25,7 +68,7 @@ module.exports = function(client) {
             email: email,
             username: username,
             password: password,
-            age: age,
+            dateOfBirth: dateOfBirth,
             role: role || 'user'
         };
 
@@ -111,6 +154,7 @@ module.exports = function(client) {
             id: Date.now().toString(),
             username,
             password,
+            dateOfBirth: '1980-01-01',
             role: 'superadmin'
         };
 

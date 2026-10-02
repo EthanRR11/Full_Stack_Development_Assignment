@@ -77,68 +77,16 @@ export class Dashboard implements OnInit {
       });
 
     this.socketService.socket.on('receive-message',
-        (message: any) => {
-
-          if (
-            this.currentChannel &&
-            message.channelID ===
-            this.currentChannel.id
-          ) {
-
-            this.messages.push(
-              message
-            );
-
-            this.cdr.detectChanges();
-
-          }
-
-        }
-      );
-
-    this.socketService.socket.on('user-joined',(data: any) => {
-
-        console.log('USER JOINED', data);
-
-        this.messages.push({
-
-          senderName: 'System',
-
-          content: `${data.username} joined the channel`
-
-        });
-
-        this.cdr.detectChanges();
-
-      }
-    );
-
-    this.socketService.socket.on('user-left',(data: any) => {
-
-        this.messages.push({
-
-          senderName: 'System',
-
-          content:
-            `${data.username} left the channel`
-
-        });
-
-        this.cdr.detectChanges();
-
-      }
-    );
-
-    this.socketService.socket.on('membership-request-created',(request: any) => {
+      (message: any) => {
 
         if (
-          this.currentGroup &&
-          request.groupID ===
-          this.currentGroup.id
+          this.currentChannel &&
+          message.channelID ===
+          this.currentChannel.id
         ) {
 
-          this.membershipRequests.push(
-            request
+          this.messages.push(
+            message
           );
 
           this.cdr.detectChanges();
@@ -148,13 +96,65 @@ export class Dashboard implements OnInit {
       }
     );
 
-    this.socketService.socket.on('online-users',(users: string[]) => {
+    this.socketService.socket.on('user-joined', (data: any) => {
 
-        this.onlineUsers = users;
+      console.log('USER JOINED', data);
+
+      this.messages.push({
+
+        senderName: 'System',
+
+        content: `${data.username} joined the channel`
+
+      });
+
+      this.cdr.detectChanges();
+
+    }
+    );
+
+    this.socketService.socket.on('user-left', (data: any) => {
+
+      this.messages.push({
+
+        senderName: 'System',
+
+        content:
+          `${data.username} left the channel`
+
+      });
+
+      this.cdr.detectChanges();
+
+    }
+    );
+
+    this.socketService.socket.on('membership-request-created', (request: any) => {
+
+      if (
+        this.currentGroup &&
+        request.groupID ===
+        this.currentGroup.id
+      ) {
+
+        this.membershipRequests.push(
+          request
+        );
 
         this.cdr.detectChanges();
 
       }
+
+    }
+    );
+
+    this.socketService.socket.on('online-users', (users: string[]) => {
+
+      this.onlineUsers = users;
+
+      this.cdr.detectChanges();
+
+    }
     );
 
   }
@@ -332,11 +332,23 @@ export class Dashboard implements OnInit {
 
     this.groupService
       .createMembershipRequest(request)
-      .subscribe(() => {
+      .subscribe({
 
-        alert(
-          'Membership request submitted'
-        );
+        next: () => {
+
+          alert(
+            'Membership request submitted'
+          );
+
+        },
+
+        error: (err) => {
+
+          alert(
+            err.error.message
+          );
+
+        }
 
       });
 

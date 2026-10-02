@@ -14,7 +14,7 @@ export class Register {
   email = '';
   username = '';
   password = '';
-  age = 0;
+  dateOfBirth = '';
 
   constructor(private authService: AuthService,
               private router: Router
@@ -26,7 +26,7 @@ export class Register {
       email: this.email,
       username: this.username,
       password: this.password,
-      age: this.age,
+      dateOfBirth: this.dateOfBirth,
       role: 'user'
     };
 
@@ -36,7 +36,7 @@ export class Register {
       next: (User) => {
         alert('User Registered!');
         this.authService.setCurrentUser(User)
-        this.router.navigate(['/dashboard'])
+        this.router.navigate(['/login'])
       },
 
       error: (error) => {

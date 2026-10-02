@@ -4,6 +4,41 @@ module.exports = function (client) {
 
     const router = express.Router();
 
+    function calculateAge(dateOfBirth) {
+
+        const today = new Date();
+
+        const birthDate =
+            new Date(dateOfBirth);
+
+        let age =
+            today.getFullYear() -
+            birthDate.getFullYear();
+
+        const monthDifference =
+            today.getMonth() -
+            birthDate.getMonth();
+
+        if (
+
+            monthDifference < 0 ||
+
+            (
+                monthDifference === 0 &&
+                today.getDate() <
+                birthDate.getDate()
+            )
+
+        ) {
+
+            age--;
+
+        }
+
+        return age;
+
+    }
+
     /* ------------------------------
        Create Group
     ------------------------------ */
@@ -13,7 +48,7 @@ module.exports = function (client) {
         const db = client.db('chatapp');
 
         const newGroup = {
-            id: Date.now(),
+            id: Date.now().toString(),
             title: req.body.title,
             description: req.body.description,
             ageLimit: req.body.ageLimit,
@@ -106,12 +141,42 @@ module.exports = function (client) {
 
         const db = client.db('chatapp');
 
+        const user = await db
+            .collection('users')
+            .findOne({
+                id: req.body.userID
+            });
+
+        const group = await db
+            .collection('groups')
+            .findOne({
+                id: req.body.groupID
+            });
+
+        const age = calculateAge(
+            user.dateOfBirth
+        );
+
+        if (age < group.ageLimit) {
+
+            return res.status(400).json({
+                message:
+                    'You do not meet the age requirements for this group.'
+            });
+
+        }
         const groupMembershipRequest = {
+
             id: Date.now().toString(),
+
             groupID: req.body.groupID,
+
             userID: req.body.userID,
+
             status: 'pending',
+
             createdAt: new Date()
+
         };
 
         await db
@@ -129,7 +194,6 @@ module.exports = function (client) {
         });
 
     });
-
     /* ------------------------------
        Get Group Membership Requests
     ------------------------------ */
