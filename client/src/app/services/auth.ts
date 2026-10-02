@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   login(username: string, password: string) {
 
@@ -38,10 +38,10 @@ export class AuthService {
 
   setCurrentUser(user: any) {
 
-  localStorage.setItem(
-    'currentUser',
-    JSON.stringify(user)
-  );
+    localStorage.setItem(
+      'currentUser',
+      JSON.stringify(user)
+    );
 
   }
 
@@ -54,36 +54,40 @@ export class AuthService {
 
   }
 
-  logout(){
+  logout() {
     localStorage.removeItem('currentUser');
     this.router.navigate([''])
   }
 
-  isloggedIn(){
+  isloggedIn() {
     return localStorage.getItem('currentUser') !== null;
   }
 
-  getCurrentUser(){
+  getCurrentUser() {
     return JSON.parse(localStorage.getItem('currentUser') || '{}');
   }
 
-  isGroupAdmin(){
+  isGroupAdmin() {
     const user = this.getCurrentUser();
     return user.role === 'groupadmin'
   }
 
-  isSuperAdmin(){
+  isSuperAdmin() {
     const user = this.getCurrentUser();
     return user.role === 'superadmin'
   }
 
   checkBootstrap() {
-  return this.http.get<any>(
-    'http://localhost:3000/api/bootstrap-check'
-  );
+    return this.http.get<any>(
+      'http://localhost:3000/api/bootstrap-check'
+    );
 
-  
+  }
+  getAuditLogs() {
 
-}
+    return this.http.get(
+      'http://localhost:3000/api/audit-logs'
+    );
 
+  }
 }

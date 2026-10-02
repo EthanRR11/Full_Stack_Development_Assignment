@@ -5,6 +5,27 @@ module.exports = function (client) {
     const router = express.Router();
 
     /* ------------------------------
+      helper function to create audit logs
+   ------------------------------ */
+    async function createAuditLog(db, action, performedBy) {
+
+        await db
+            .collection('auditLogs')
+            .insertOne({
+
+                id: Date.now().toString(),
+
+                action,
+
+                performedBy,
+
+                timestamp: new Date()
+
+            });
+
+    }
+
+    /* ------------------------------
        Approves group request
     ------------------------------ */
 
@@ -37,6 +58,13 @@ module.exports = function (client) {
         await db
             .collection('groups')
             .insertOne(newGroup);
+
+        await createAuditLog(
+            db,
+            'Group Approved',
+            'superadmin'
+        );
+
         await db
             .collection('users')
             .updateOne(
@@ -125,6 +153,12 @@ module.exports = function (client) {
             .collection('channels')
             .insertOne(newChannel);
 
+        await createAuditLog(
+            db,
+            'Channel Approved',
+            'groupadmin'
+        );
+
         await db
             .collection('ChannelCreationRequests')
             .updateOne(
@@ -172,9 +206,9 @@ module.exports = function (client) {
 
     });
 
-     /* ------------------------------
-       Gets all users
-    ------------------------------ */
+    /* ------------------------------
+      Gets all users
+   ------------------------------ */
 
     router.get('/users', async (req, res) => {
 
@@ -182,29 +216,29 @@ module.exports = function (client) {
         const db = client.db('chatapp')
 
         user = await db
-        .collection('users')
-        .find({})
-        .toArray()
+            .collection('users')
+            .find({})
+            .toArray()
 
 
         res.json(user)
 
     })
 
-     /* ------------------------------
-       Gets a specific user
-    ------------------------------ */
+    /* ------------------------------
+      Gets a specific user
+   ------------------------------ */
     router.get('/users/:userid', async (req, res) => {
 
         const db = client.db('chatapp')
 
         const user = await db
-        .collection('users')
-        .findOne({
-            id: req.params.userid
-        })
+            .collection('users')
+            .findOne({
+                id: req.params.userid
+            })
 
-        if (!user){
+        if (!user) {
             return res.status(404).json({
                 message: 'User not found'
             })
@@ -215,24 +249,49 @@ module.exports = function (client) {
 
     })
 
-     /* ------------------------------
-       Deletes a user
-    ------------------------------ */
-    router.delete('/users/:userid', async (req,res) =>{
+    /* ------------------------------
+      Deletes a user
+   ------------------------------ */
+    router.delete('/users/:userid', async (req, res) => {
 
         const db = client.db('chatapp')
 
         const user = await db
-        .collection('users')
-        .deleteOne({
-            id: req.params.userid
-        })
-        
+            .collection('users')
+            .deleteOne({
+                id: req.params.userid
+            })
+
+        await createAuditLog(
+            db,
+            'User Deleted',
+            'superadmin'
+        );
+
         res.json({
             message: 'User deleted'
         })
 
     })
+
+    /* ------------------------------
+      Get Audit Logs
+   ------------------------------ */
+    router.get('/audit-logs', async (req, res) => {
+
+        const db = client.db('chatapp');
+
+        const logs = await db
+            .collection('auditLogs')
+            .find({})
+            .sort({
+                timestamp: -1
+            })
+            .toArray();
+
+        res.json(logs);
+
+    });
 
 
 

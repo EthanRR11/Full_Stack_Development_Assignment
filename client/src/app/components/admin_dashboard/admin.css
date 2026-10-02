@@ -270,3 +270,24 @@ body {
 .delete-btn:hover {
     background: #ea0c0c;
 }
+.audit-logs {
+
+    margin-top: 30px;
+
+    padding: 20px;
+
+    background: white;
+
+    border-radius: 8px;
+
+}
+
+.audit-log {
+
+    padding: 10px;
+
+    margin-bottom: 10px;
+
+    border-bottom: 1px solid #ddd;
+
+}

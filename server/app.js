@@ -3,6 +3,7 @@ const cors = require('cors');
 const { MongoClient } = require('mongodb');
 const http = require('http');
 const { Server } = require('socket.io');
+const bcrypt = require('bcrypt');
 
 const authRoutes = require('./routes/auth.routes');
 const groupRoutes = require('./routes/group.routes');
@@ -30,6 +31,12 @@ async function bootstrapSuperAdmin() {
 
     if (!superAdmin) {
 
+        const hashedPassword =
+            await bcrypt.hash(
+                'admin123',
+                10
+            );
+
         await db
             .collection('users')
             .insertOne({
@@ -38,7 +45,9 @@ async function bootstrapSuperAdmin() {
 
                 username: 'admin',
 
-                password: 'admin123',
+                password: hashedPassword,
+
+                dateOfBirth: '1980-01-01',
 
                 role: 'superadmin'
 

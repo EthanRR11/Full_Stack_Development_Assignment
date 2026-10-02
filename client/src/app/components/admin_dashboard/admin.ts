@@ -19,6 +19,7 @@ export class Admin implements OnInit {
   users: any[] = [];
   groups: any[] = [];
   groupRequests: any[] = [];
+  auditLogs: any[] = [];
 
   totalUsers = 0;
   totalGroups = 0;
@@ -30,7 +31,7 @@ export class Admin implements OnInit {
     private userService: UserService,
     private groupService: GroupService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
 
@@ -78,6 +79,16 @@ export class Admin implements OnInit {
 
         this.groupRequests = requests;
         this.pendingRequests = requests.length;
+        this.cdr.detectChanges();
+
+      });
+
+    this.authService
+      .getAuditLogs()
+      .subscribe((logs: any) => {
+
+        this.auditLogs = logs;
+
         this.cdr.detectChanges();
 
       });

@@ -91,6 +91,8 @@ export class Dashboard implements OnInit {
 
           this.cdr.detectChanges();
 
+          this.scrollToBottom();
+
         }
 
       }
@@ -109,6 +111,7 @@ export class Dashboard implements OnInit {
       });
 
       this.cdr.detectChanges();
+      this.scrollToBottom();
 
     }
     );
@@ -125,6 +128,7 @@ export class Dashboard implements OnInit {
       });
 
       this.cdr.detectChanges();
+      this.scrollToBottom();
 
     }
     );
@@ -228,6 +232,8 @@ export class Dashboard implements OnInit {
 
         this.cdr.detectChanges();
 
+        this.scrollToBottom();
+
       });
 
   }
@@ -246,6 +252,8 @@ export class Dashboard implements OnInit {
       this.authService.getCurrentUser();
 
     const newMessage = {
+
+      id: Date.now().toString(),
 
       senderID: currentUser.id,
 
@@ -273,6 +281,8 @@ export class Dashboard implements OnInit {
 
             this.cdr.detectChanges();
 
+            
+
           });
 
       });
@@ -287,6 +297,8 @@ export class Dashboard implements OnInit {
 
     }
 
+
+
     this.messageService
       .deleteMessage(id)
       .subscribe(() => {
@@ -298,6 +310,8 @@ export class Dashboard implements OnInit {
             this.messages = messages;
 
             this.cdr.detectChanges();
+
+            this.scrollToBottom();
 
           });
 
@@ -489,4 +503,26 @@ export class Dashboard implements OnInit {
     this.authService.logout();
 
   }
+
+  
+  //have chat message area automatically scroll to bottom when a new message appears
+  scrollToBottom() {
+
+  setTimeout(() => {
+
+    const container =
+      document.getElementById(
+        'messageContainer'
+      );
+
+    if (container) {
+
+      container.scrollTop =
+        container.scrollHeight;
+
+    }
+
+  });
+
+}
 }

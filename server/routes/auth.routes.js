@@ -1,44 +1,9 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 
 module.exports = function (client) {
 
     const router = express.Router();
-
-
-    function calculateAge(dateOfBirth) {
-
-        const today = new Date();
-
-        const birthDate =
-            new Date(dateOfBirth);
-
-        let age =
-            today.getFullYear() -
-            birthDate.getFullYear();
-
-        const monthDifference =
-            today.getMonth() -
-            birthDate.getMonth();
-
-        if (
-
-            monthDifference < 0 ||
-
-            (
-                monthDifference === 0 &&
-                today.getDate() <
-                birthDate.getDate()
-            )
-
-        ) {
-
-            age--;
-
-        }
-
-        return age;
-
-    }
     /* ------------------------------
        Register User
     ------------------------------ */
@@ -63,11 +28,17 @@ module.exports = function (client) {
 
         const db = client.db('chatapp');
 
+        const hashedPassword =
+            await bcrypt.hash(
+                password,
+                10
+            );
+
         const newUser = {
             id: Date.now().toString(),
             email: email,
             username: username,
-            password: password,
+            password: hashedPassword,
             dateOfBirth: dateOfBirth,
             role: role || 'user'
         };
@@ -88,25 +59,41 @@ module.exports = function (client) {
 
     router.post('/login', async (req, res) => {
 
-        const db = client.db('chatapp');
-        const { username, password } = req.body;
+    const db = client.db('chatapp');
 
-        const user = await db
-            .collection('users')
-            .findOne({
-                username: username,
-                password: password
-            });
+    const { username, password } = req.body;
 
-        if (!user) {
-            return res.status(401).json({
-                message: 'Invalid Login'
-            });
-        }
+    const user = await db
+        .collection('users')
+        .findOne({
+            username: username
+        });
 
-        res.json(user);
+    if (!user) {
 
-    });
+        return res.status(401).json({
+            message: 'Invalid Login'
+        });
+
+    }
+
+    const validPassword =
+        await bcrypt.compare(
+            password,
+            user.password
+        );
+
+    if (!validPassword) {
+
+        return res.status(401).json({
+            message: 'Invalid Login'
+        });
+
+    }
+
+    res.json(user);
+
+});
 
     /* ------------------------------
        Bootstrap Check

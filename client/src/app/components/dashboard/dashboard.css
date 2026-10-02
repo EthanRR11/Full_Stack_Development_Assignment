@@ -340,3 +340,20 @@ nav {
 .remove-member-btn:hover {
     background: #dc2626;
 }
+.username {
+
+    color: white;
+
+    font-weight: bold;
+
+    margin-right: 15px;
+
+}
+
+.messages {
+
+    height: 500px;
+
+    overflow-y: auto;
+
+}

@@ -52,7 +52,7 @@
 
     <main class="main-content">
 
-
+        <!-- DASHBOARD -->
         <div *ngIf="activePanel === 'dashboard'">
 
             <div class="top-section">
@@ -85,11 +85,12 @@
 
                     <h3>System Notification</h3>
 
-                    <textarea
-                        placeholder="Send a message to all users..."
-                    ></textarea>
+                    <textarea placeholder="Send a message to all users...">
+                </textarea>
 
-                    <button>Send</button>
+                    <button>
+                        Send
+                    </button>
 
                 </div>
 
@@ -117,7 +118,20 @@
 
                     <h3>Recent Audit Logs</h3>
 
-                    <p>No audit logs available.</p>
+                    <div *ngIf="auditLogs.length === 0">
+
+                        No audit logs available.
+
+                    </div>
+
+                    <div *ngFor="
+                        let log of auditLogs
+                        | slice:0:5
+                    ">
+
+                        {{ log.action }}
+
+                    </div>
 
                 </div>
 
@@ -125,8 +139,7 @@
 
         </div>
 
-        
-
+        <!-- USER MANAGEMENT -->
         <div *ngIf="activePanel === 'users'">
 
             <div class="panel">
@@ -139,10 +152,10 @@
 
                         {{ user.username }}
 
-                        <button
-                            class = 'delete-btn'
-                            (click)="deleteUser(user.id)">
+                        <button class="delete-btn" (click)="deleteUser(user.id)">
+
                             Delete
+
                         </button>
 
                     </li>
@@ -153,8 +166,7 @@
 
         </div>
 
-       
-
+        <!-- GROUP REQUESTS -->
         <div *ngIf="activePanel === 'requests'">
 
             <div class="panel">
@@ -167,16 +179,16 @@
 
                         {{ request.title }}
 
-                        <button
-                            class = 'approve-btn'
-                            (click)="approveRequest(request.id)">
+                        <button class="approve-btn" (click)="approveRequest(request.id)">
+
                             Approve
+
                         </button>
 
-                        <button
-                            class = 'reject-btn'
-                            (click)="rejectRequest(request.id)">
+                        <button class="reject-btn" (click)="rejectRequest(request.id)">
+
                             Reject
+
                         </button>
 
                     </li>
@@ -187,34 +199,57 @@
 
         </div>
 
-        
-
+        <!-- AUDIT LOGS -->
         <div *ngIf="activePanel === 'logs'">
 
-            <div class="panel">
+            <section class="audit-logs">
 
-                <h3>Audit Logs</h3>
+                <h2>Audit Logs</h2>
 
-                <p>Audit logs will appear here.</p>
+                <div *ngIf="auditLogs.length === 0">
 
-            </div>
+                    No audit logs available.
+
+                </div>
+
+                <div class="audit-log" *ngFor="let log of auditLogs">
+
+                    <strong>
+                        {{ log.action }}
+                    </strong>
+
+                    <br>
+
+                    Performed By:
+                    {{ log.performedBy }}
+
+                    <br>
+
+                    Time:
+                    {{ log.timestamp | date:'short' }}
+
+                </div>
+
+            </section>
 
         </div>
 
+        <!-- SYSTEM NOTIFICATIONS -->
         <div *ngIf="activePanel === 'notifications'">
 
             <div class="panel">
 
                 <h3>System Notifications</h3>
 
-                <textarea
-                    placeholder="Enter notification..."
-                ></textarea>
+                <textarea placeholder="Enter notification...">
+            </textarea>
 
                 <br><br>
 
                 <button>
+
                     Send Notification
+
                 </button>
 
             </div>

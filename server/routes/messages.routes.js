@@ -44,10 +44,14 @@ module.exports = function(client) {
         .find({
             channelID: req.params.channelID
         })
+        .sort({
+            timestamp: -1
+        })
+        .limit(5)
         .toArray()
 
 
-        res.json(messages)
+        res.json(messages.reverse());
     })
         /* ------------------------------
        deletes message
@@ -58,7 +62,7 @@ module.exports = function(client) {
         const message = await db
         .collection('messages')
         .deleteOne({
-            id: number(req.params.id)
+            id: req.params.id
         })
 
         res.json({

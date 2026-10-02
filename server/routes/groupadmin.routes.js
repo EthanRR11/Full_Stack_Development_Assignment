@@ -1,14 +1,14 @@
 const express = require('express');
 
-module.exports = function(client) {
+module.exports = function (client) {
 
     const router = express.Router();
 
 
 
-/* ------------------------------
-       Approves group membership request
-    ------------------------------ */
+    /* ------------------------------
+           Approves group membership request
+        ------------------------------ */
 
     router.post('/group-membership-requests/:id/approve', async (req, res) => {
 
@@ -38,8 +38,13 @@ module.exports = function(client) {
                     }
                 }
             );
+        await createAuditLog(
+            db,
+            'Membership Approved',
+            'groupadmin'
+        );
 
-        
+
 
         await db
             .collection('groupMembershipRequests')
@@ -80,6 +85,11 @@ module.exports = function(client) {
                     }
                 }
             );
+        await createAuditLog(
+            db,
+            'Membership Rejected',
+            'groupadmin'
+        );
 
         res.json({
             message: 'Group Membership Request Rejected'
@@ -91,48 +101,54 @@ module.exports = function(client) {
        Gets group members
     ------------------------------ */
 
-    router.get('/group-members/:groupID', async (req,res) => {
+    router.get('/group-members/:groupID', async (req, res) => {
         const db = client.db('chatapp')
 
-        const group = await db 
-        .collection('groups')
-        .findOne({
-            id: req.params.groupID
-        })
-        
+        const group = await db
+            .collection('groups')
+            .findOne({
+                id: req.params.groupID
+            })
+
 
         res.json(group.members)
     })
 
-     /* ------------------------------
-       Remove Group Member
-    ------------------------------ */
+    /* ------------------------------
+      Remove Group Member
+   ------------------------------ */
     router.post(
-    '/group-members/remove',
-    async (req, res) => {
+        '/group-members/remove',
+        async (req, res) => {
 
-        const db = client.db('chatapp');
+            const db = client.db('chatapp');
 
-        await db
-            .collection('groups')
-            .updateOne(
-                {
-                    id: req.body.groupID
-                },
-                {
-                    $pull: {
-                        members: req.body.userID
+            await db
+                .collection('groups')
+                .updateOne(
+                    {
+                        id: req.body.groupID
+                    },
+                    {
+                        $pull: {
+                            members: req.body.userID
+                        }
                     }
-                }
+                );
+
+            await createAuditLog(
+                db,
+                'Member Removed',
+                'groupadmin'
             );
 
-        res.json({
-            message: 'Member Removed'
-        });
+            res.json({
+                message: 'Member Removed'
+            });
 
-});
+        });
 
     return router
 
-    
+
 }  
