@@ -189,7 +189,7 @@
         <div class="message" *ngFor="let request of membershipRequests">
 
             <strong>
-                {{ request.userID }}
+                {{ request.username || request.userID}}
             </strong>
 
             <div class="admin-actions">

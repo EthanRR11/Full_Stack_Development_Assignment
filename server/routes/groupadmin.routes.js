@@ -4,6 +4,28 @@ module.exports = function (client) {
 
     const router = express.Router();
 
+    async function createAuditLog(
+        db,
+        action,
+        performedBy
+    ) {
+
+        await db
+            .collection('auditLogs')
+            .insertOne({
+
+                id: Date.now().toString(),
+
+                action,
+
+                performedBy,
+
+                timestamp: new Date()
+
+            });
+
+    }
+
 
 
     /* ------------------------------
@@ -102,17 +124,27 @@ module.exports = function (client) {
     ------------------------------ */
 
     router.get('/group-members/:groupID', async (req, res) => {
-        const db = client.db('chatapp')
+
+        const db = client.db('chatapp');
 
         const group = await db
             .collection('groups')
             .findOne({
                 id: req.params.groupID
+            });
+
+        const members = await db
+            .collection('users')
+            .find({
+                id: {
+                    $in: group.members
+                }
             })
+            .toArray();
 
+        res.json(members);
 
-        res.json(group.members)
-    })
+    });
 
     /* ------------------------------
       Remove Group Member

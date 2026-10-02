@@ -200,19 +200,50 @@ module.exports = function (client) {
 
     router.get('/group-membership-requests/:groupID', async (req, res) => {
 
-        const db = client.db('chatapp');
+    const db = client.db('chatapp');
 
-        const requests = await db
-            .collection('groupMembershipRequests')
-            .find({
-                groupID: req.params.groupID,
-                status: 'pending'
-            })
-            .toArray();
+    const requests = await db
+        .collection('groupMembershipRequests')
+        .find({
+            groupID: req.params.groupID,
+            status: 'pending'
+        })
+        .toArray();
 
-        res.json(requests);
+    const requestsWithUsers =
+        await Promise.all(
 
-    });
+            requests.map(
+                async (request) => {
+
+                    const user =
+                        await db
+                            .collection('users')
+                            .findOne({
+                                id: request.userID
+                            });
+
+                    return {
+
+                        ...request,
+
+                        username:
+                            user
+                                ? user.username
+                                : 'Unknown User'
+
+                    };
+
+                }
+            )
+
+        );
+
+    res.json(
+        requestsWithUsers
+    );
+
+});
 
     return router
 
